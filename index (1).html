@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Orbit — Study Planner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ============ LOADER ============ -->
+<div id="app-loader" class="app-loader" aria-hidden="true">
+  <div class="loader-ring"></div>
+  <p class="loader-text">Charting your orbit…</p>
+</div>
+
+<!-- ============ SKIP LINK ============ -->
+<a href="#main-content" class="skip-link">Skip to content</a>
+
+<div class="app-shell">
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 40 40" width="26" height="26">
+          <circle cx="20" cy="20" r="8" fill="currentColor"/>
+          <ellipse cx="20" cy="20" rx="18" ry="7" fill="none" stroke="currentColor" stroke-width="2" transform="rotate(-25 20 20)"/>
+        </svg>
+      </div>
+      <span class="brand-name">Orbit</span>
+      <button class="sidebar-toggle" id="sidebarToggle" aria-label="Collapse sidebar" title="Collapse sidebar (⌘B)">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+    </div>
+
+    <nav class="sidebar-nav" aria-label="Main navigation">
+      <button class="nav-item is-active" data-page="dashboard">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="2"/><rect x="14" y="3" width="7" height="5" rx="2"/><rect x="14" y="12" width="7" height="9" rx="2"/><rect x="3" y="16" width="7" height="5" rx="2"/></svg>
+        <span>Dashboard</span>
+      </button>
+      <button class="nav-item" data-page="tasks">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+        <span>Tasks</span>
+        <span class="nav-badge" id="navTaskBadge">0</span>
+      </button>
+      <button class="nav-item" data-page="calendar">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+        <span>Calendar</span>
+      </button>
+      <button class="nav-item" data-page="focus">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/></svg>
+        <span>Focus</span>
+      </button>
+      <button class="nav-item" data-page="notes">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h13l3 3v13H4z"/><path d="M8 4v6h8V4M8 13h8M8 17h5"/></svg>
+        <span>Notes</span>
+      </button>
+      <button class="nav-item" data-page="analytics">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 15l4-5 3 3 5-7"/></svg>
+        <span>Analytics</span>
+      </button>
+      <button class="nav-item" data-page="settings">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.34 1.87l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.7 1.7 0 00-1.87-.34 1.7 1.7 0 00-1 1.55V21a2 2 0 01-4 0v-.09A1.7 1.7 0 009 19.4a1.7 1.7 0 00-1.87.34l-.06.06a2 2 0 11-2.83-2.83l.06-.06A1.7 1.7 0 004.6 15a1.7 1.7 0 00-1.55-1H3a2 2 0 010-4h.09A1.7 1.7 0 004.6 9a1.7 1.7 0 00-.34-1.87l-.06-.06a2 2 0 112.83-2.83l.06.06A1.7 1.7 0 009 4.6a1.7 1.7 0 001-1.55V3a2 2 0 014 0v.09a1.7 1.7 0 001 1.55 1.7 1.7 0 001.87-.34l.06-.06a2 2 0 112.83 2.83l-.06.06A1.7 1.7 0 0019.4 9a1.7 1.7 0 001.55 1H21a2 2 0 010 4h-.09a1.7 1.7 0 00-1.51 1z"/></svg>
+        <span>Settings</span>
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="streak-chip" title="Study streak">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2c2 4-2 5-2 9a4 4 0 008 0c2 2 2 6-1 8a7 7 0 01-11-5c0-4 3-6 3-10 1 1 2 1 3-2z"/></svg>
+        <span id="sidebarStreak">0</span> day streak
+      </div>
+      <button class="theme-quick-toggle" id="themeQuickToggle" title="Toggle theme (⌘J)" aria-label="Toggle light and dark theme">
+        <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+        <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1111.2 3 7 7 0 0021 12.8z"/></svg>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ============ MAIN ============ -->
+  <div class="main-wrap">
+    <!-- Top bar -->
+    <header class="topbar">
+      <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open menu">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+      <div class="topbar-search">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        <input type="text" id="globalSearch" placeholder="Search tasks, notes… (⌘K)" aria-label="Global search">
+      </div>
+      <div class="topbar-actions">
+        <span class="live-clock" id="topbarClock">--:--</span>
+        <button class="btn-icon" id="quickAddBtn" title="Quick add task (⌘N)" aria-label="Quick add task">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+        </button>
+        <div class="avatar" id="userAvatar" title="Your profile">S</div>
+      </div>
+    </header>
+
+    <main id="main-content" class="content">
+
+      <!-- ============ DASHBOARD ============ -->
+      <section class="page is-active" id="page-dashboard" data-page="dashboard">
+        <div class="page-head">
+          <div>
+            <p class="eyebrow" id="dashDate">Loading date…</p>
+            <h1 class="page-title" id="dashGreeting">Welcome back</h1>
+          </div>
+          <div class="page-head-clock">
+            <span id="dashClock">--:--:--</span>
+          </div>
+        </div>
+
+        <div class="bento-grid">
+
+          <!-- Welcome / hero card -->
+          <div class="card card-hero span-8">
+            <div class="hero-glow" aria-hidden="true"></div>
+            <div class="hero-content">
+              <p class="hero-kicker">Today's focus</p>
+              <h2 class="hero-title" id="heroQuote">Small steps, every day, build the biggest wins.</h2>
+              <p class="hero-sub" id="heroQuoteAuthor">— Orbit</p>
+              <div class="hero-stats">
+                <div class="hero-stat">
+                  <span class="hero-stat-num" id="heroTasksDone">0/0</span>
+                  <span class="hero-stat-label">Tasks today</span>
+                </div>
+                <div class="hero-stat">
+                  <span class="hero-stat-num" id="heroFocusTime">0m</span>
+                  <span class="hero-stat-label">Focused today</span>
+                </div>
+                <div class="hero-stat">
+                  <span class="hero-stat-num" id="heroScore">0</span>
+                  <span class="hero-stat-label">Productivity</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Productivity ring -->
+          <div class="card card-ring span-4">
+            <h3 class="card-title">Productivity Score</h3>
+            <div class="ring-wrap">
+              <svg viewBox="0 0 140 140" class="ring-svg">
+                <circle cx="70" cy="70" r="60" class="ring-track"/>
+                <circle cx="70" cy="70" r="60" class="ring-progress" id="productivityRing" stroke-dasharray="377" stroke-dashoffset="377"/>
+              </svg>
+              <div class="ring-center">
+                <span class="ring-value" id="productivityValue">0</span>
+                <span class="ring-unit">/ 100</span>
+              </div>
+            </div>
+            <p class="ring-caption" id="productivityCaption">Complete tasks to build momentum</p>
+          </div>
+
+          <!-- Daily progress -->
+          <div class="card span-4">
+            <div class="card-title-row">
+              <h3 class="card-title">Daily Progress</h3>
+              <span class="pill" id="dailyProgressPill">0%</span>
+            </div>
+            <div class="bar-track"><div class="bar-fill" id="dailyProgressBar"></div></div>
+            <p class="card-note" id="dailyProgressNote">0 of 0 tasks complete</p>
+          </div>
+
+          <!-- Weekly progress -->
+          <div class="card span-4">
+            <div class="card-title-row">
+              <h3 class="card-title">Weekly Progress</h3>
+              <span class="pill" id="weeklyProgressPill">0%</span>
+            </div>
+            <div class="mini-bars" id="weeklyMiniBars" aria-hidden="true"></div>
+            <p class="card-note" id="weeklyProgressNote">This week</p>
+          </div>
+
+          <!-- Study streak -->
+          <div class="card card-streak span-4">
+            <h3 class="card-title">Study Streak</h3>
+            <div class="streak-display">
+              <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="streak-flame"><path d="M12 2c2 4-2 5-2 9a4 4 0 008 0c2 2 2 6-1 8a7 7 0 01-11-5c0-4 3-6 3-10 1 1 2 1 3-2z"/></svg>
+              <span class="streak-num" id="streakDays">0</span>
+              <span class="streak-label">days</span>
+            </div>
+            <p class="card-note">Keep the flame alive — finish one task today.</p>
+          </div>
+
+          <!-- Today's tasks -->
+          <div class="card span-6">
+            <div class="card-title-row">
+              <h3 class="card-title">Today's Tasks</h3>
+              <button class="link-btn" data-goto="tasks">View all</button>
+            </div>
+            <ul class="task-mini-list" id="todayTaskList">
+              <li class="empty-state-mini">No tasks scheduled for today yet.</li>
+            </ul>
+          </div>
+
+          <!-- Upcoming tasks -->
+          <div class="card span-6">
+            <div class="card-title-row">
+              <h3 class="card-title">Upcoming Tasks</h3>
+              <button class="link-btn" data-goto="calendar">Calendar</button>
+            </div>
+            <ul class="task-mini-list" id="upcomingTaskList">
+              <li class="empty-state-mini">Nothing on the horizon.</li>
+            </ul>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ============ TASK MANAGER ============ -->
+      <section class="page" id="page-tasks" data-page="tasks">
+        <div class="page-head">
+          <div>
+            <p class="eyebrow">Task Manager</p>
+            <h1 class="page-title">Your tasks</h1>
+          </div>
+          <button class="btn btn-primary" id="openTaskModalBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+            New task
+          </button>
+        </div>
+
+        <div class="card">
+          <div class="task-toolbar">
+            <div class="toolbar-search">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+              <input type="text" id="taskSearch" placeholder="Search tasks…">
+            </div>
+            <div class="toolbar-selects">
+              <select id="filterCategory" aria-label="Filter by category">
+                <option value="all">All categories</option>
+                <option value="study">Study</option>
+                <option value="assignment">Assignment</option>
+                <option value="exam">Exam</option>
+                <option value="reading">Reading</option>
+                <option value="project">Project</option>
+                <option value="personal">Personal</option>
+              </select>
+              <select id="filterPriority" aria-label="Filter by priority">
+                <option value="all">All priorities</option>
+                <option value="high">High</option>
+                <option value="medium">Medium</option>
+                <option value="low">Low</option>
+              </select>
+              <select id="filterStatus" aria-label="Filter by status">
+                <option value="all">All status</option>
+                <option value="pending">Pending</option>
+                <option value="completed">Completed</option>
+                <option value="overdue">Overdue</option>
+              </select>
+              <select id="sortTasks" aria-label="Sort tasks">
+                <option value="dueDate">Sort: Due date</option>
+                <option value="priority">Sort: Priority</option>
+                <option value="created">Sort: Newest</option>
+                <option value="alpha">Sort: A–Z</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="task-progress-summary">
+            <div class="bar-track"><div class="bar-fill" id="taskListProgressBar"></div></div>
+            <span id="taskListProgressText">0 of 0 complete</span>
+          </div>
+
+          <ul class="task-list" id="taskList">
+            <!-- Tasks injected here -->
+          </ul>
+          <div class="empty-state" id="taskEmptyState" hidden>
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+            <p>No tasks match your filters yet.</p>
+            <button class="btn btn-primary" data-openmodal="task">Add your first task</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ CALENDAR ============ -->
+      <section class="page" id="page-calendar" data-page="calendar">
+        <div class="page-head">
+          <div>
+            <p class="eyebrow">Calendar</p>
+            <h1 class="page-title" id="calendarTitle">Loading…</h1>
+          </div>
+          <div class="calendar-controls">
+            <div class="view-switch" role="tablist">
+              <button class="view-switch-btn is-active" data-cal-view="month">Month</button>
+              <button class="view-switch-btn" data-cal-view="week">Week</button>
+              <button class="view-switch-btn" data-cal-view="day">Day</button>
+            </div>
+            <div class="nav-arrows">
+              <button class="btn-icon" id="calPrev" aria-label="Previous">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+              </button>
+              <button class="btn btn-ghost" id="calToday">Today</button>
+              <button class="btn-icon" id="calNext" aria-label="Next">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card calendar-card">
+          <div id="calendarMonthView" class="calendar-month">
+            <div class="calendar-weekdays" id="calendarWeekdays"></div>
+            <div class="calendar-grid" id="calendarGrid"></div>
+          </div>
+          <div id="calendarWeekView" class="calendar-week" hidden></div>
+          <div id="calendarDayView" class="calendar-day" hidden></div>
+        </div>
+      </section>
+
+      <!-- ============ FOCUS CENTER ============ -->
+      <section class="page" id="page-focus" data-page="focus">
+        <div class="page-head">
+          <div>
+            <p class="eyebrow">Focus Center</p>
+            <h1 class="page-title">Deep work, on your terms</h1>
+          </div>
+          <button class="btn btn-ghost" id="focusModeBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 00-2 2v3M16 3h3a2 2 0 012 2v3M8 21H5a2 2 0 01-2-2v-3M16 21h3a2 2 0 002-2v-3"/></svg>
+            Focus mode
+          </button>
+        </div>
+
+        <div class="focus-grid">
+          <!-- Timer card -->
+          <div class="card focus-timer-card">
+            <div class="timer-tabs" role="tablist">
+              <button class="timer-tab is-active" data-timer="pomodoro">Pomodoro</button>
+              <button class="timer-tab" data-timer="countdown">Countdown</button>
+              <button class="timer-tab" data-timer="stopwatch">Stopwatch</button>
+            </div>
+
+            <div class="timer-display-wrap">
+              <svg viewBox="0 0 260 260" class="timer-ring">
+                <circle cx="130" cy="130" r="115" class="timer-ring-track"/>
+                <circle cx="130" cy="130" r="115" class="timer-ring-progress" id="timerRingProgress" stroke-dasharray="722" stroke-dashoffset="0"/>
+              </svg>
+              <div class="timer-center">
+                <span class="timer-time" id="timerDisplay">25:00</span>
+                <span class="timer-phase" id="timerPhase">Focus session</span>
+              </div>
+            </div>
+
+            <!-- Pomodoro / Countdown settings -->
+            <div class="timer-settings" id="timerSettingsPanel">
+              <div class="timer-setting-row">
+                <label for="pomodoroFocusMin">Focus (min)</label>
+                <input type="number" id="pomodoroFocusMin" min="1" max="180" value="25">
+              </div>
+              <div class="timer-setting-row">
+                <label for="pomodoroBreakMin">Break (min)</label>
+                <input type="number" id="pomodoroBreakMin" min="1" max="60" value="5">
+              </div>
+              <div class="timer-setting-row">
+                <label for="pomodoroLongBreakMin">Long break (min)</label>
+                <input type="number" id="pomodoroLongBreakMin" min="1" max="90" value="15">
+              </div>
+              <div class="timer-setting-row">
+                <label for="pomodoroRounds">Rounds until long break</label>
+                <input type="number" id="pomodoroRounds" min="1" max="12" value="4">
+              </div>
+            </div>
+            <div class="timer-settings" id="countdownSettingsPanel" hidden>
+              <div class="timer-setting-row">
+                <label for="countdownMin">Minutes</label>
+                <input type="number" id="countdownMin" min="1" max="360" value="10">
+              </div>
+            </div>
+
+            <div class="timer-controls">
+              <button class="btn btn-ghost" id="timerResetBtn" aria-label="Reset timer">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 4v6h6M23 20v-6h-6"/><path d="M20.5 9A9 9 0 105.6 18.4L1 20"/></svg>
+              </button>
+              <button class="btn btn-primary btn-large" id="timerStartBtn">Start</button>
+              <button class="btn btn-ghost" id="timerSkipBtn" aria-label="Skip phase">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 4l10 8-10 8V4zM19 5v14"/></svg>
+              </button>
+            </div>
+
+            <div class="timer-meta">
+              <span id="pomodoroRoundLabel">Round 1 of 4</span>
+              <label class="mini-toggle">
+                <input type="checkbox" id="autoStartNext">
+                <span>Auto-start next phase</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Side column -->
+          <div class="focus-side">
+            <div class="card">
+              <h3 class="card-title">Background sound</h3>
+              <div class="sound-grid" id="soundGrid">
+                <button class="sound-chip" data-sound="none">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9v6h4l5 5V4L7 9H3z"/><line x1="23" y1="1" x2="1" y2="23"/></svg>
+                  Silence
+                </button>
+                <button class="sound-chip" data-sound="rain">🌧️ Rain</button>
+                <button class="sound-chip" data-sound="forest">🌲 Forest</button>
+                <button class="sound-chip" data-sound="waves">🌊 Waves</button>
+                <button class="sound-chip" data-sound="whitenoise">📻 White noise</button>
+                <button class="sound-chip" data-sound="cafe">☕ Café</button>
+              </div>
+              <div class="volume-row">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 010 7"/></svg>
+                <input type="range" id="bgVolumeSlider" min="0" max="100" value="40">
+              </div>
+              <p class="card-note">Ambient tones generated in-browser — no downloads needed.</p>
+            </div>
+
+            <div class="card">
+              <h3 class="card-title">Session history</h3>
+              <ul class="session-history" id="sessionHistoryList">
+                <li class="empty-state-mini">No sessions logged yet today.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Alarm system -->
+        <div class="card">
+          <div class="card-title-row">
+            <h3 class="card-title">Alarm system</h3>
+            <button class="btn btn-primary" id="addAlarmBtn">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+              New alarm
+            </button>
+          </div>
+          <ul class="alarm-list" id="alarmList">
+            <li class="empty-state-mini">No alarms set. Add one to get started.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ============ NOTES ============ -->
+      <section class="page" id="page-notes" data-page="notes">
+        <div class="page-head">
+          <div>
+            <p class="eyebrow">Notes</p>
+            <h1 class="page-title">Your notebook</h1>
+          </div>
+          <button class="btn btn-primary" id="newNoteBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+            New note
+          </button>
+        </div>
+
+        <div class="notes-toolbar">
+          <div class="toolbar-search">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+            <input type="text" id="noteSearch" placeholder="Search notes…">
+          </div>
+          <div class="chip-filter" id="noteCategoryFilter">
+            <button class="chip is-active" data-cat="all">All</button>
+            <button class="chip" data-cat="study">Study</button>
+            <button class="chip" data-cat="ideas">Ideas</button>
+            <button class="chip" data-cat="reference">Reference</button>
+            <button class="chip" data-cat="personal">Personal</button>
+          </div>
+        </div>
+
+        <div class="notes-grid" id="notesGrid">
+          <!-- Notes injected here -->
+        </div>
+        <div class="empty-state" id="notesEmptyState" hidden>
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h13l3 3v13H4z"/></svg>
+          <p>No notes yet — capture your first thought.</p>
+          <button class="btn btn-primary" id="notesEmptyAddBtn">Create a note</button>
+        </div>
+      </section>
+
+      <!-- ============ ANALYTICS ============ -->
+      <section class="page" id="page-analytics" data-page="analytics">
+        <div class="page-head">
+          <div>
+            <p class="eyebrow">Analytics</p>
+            <h1 class="page-title">Your progress, visualized</h1>
+          </div>
+          <select id="analyticsRange" aria-label="Analytics range">
+            <option value="7">Last 7 days</option>
+            <option value="30">Last 30 days</option>
+          </select>
+        </div>
+
+        <div class="stat-strip">
+          <div class="stat-pill"><span id="statProductivity">0</span><label>Productivity score</label></div>
+          <div class="stat-pill"><span id="statStreak">0</span><label>Day streak</label></div>
+          <div class="stat-pill"><span id="statTasksDone">0</span><label>Tasks completed</label></div>
+          <div class="stat-pill"><span id="statFocusSessions">0</span><label>Focus sessions</label></div>
+          <div class="stat-pill"><span id="statFocusHours">0h</span><label>Total focus time</label></div>
+        </div>
+
+        <div class="analytics-grid">
+          <div class="card span-8">
+            <h3 class="card-title">Daily study time</h3>
+            <canvas id="chartDailyTime" height="220"></canvas>
+          </div>
+          <div class="card span-4">
+            <h3 class="card-title">Task completion</h3>
+            <canvas id="chartTaskCompletion" height="220"></canvas>
+          </div>
+          <div class="card span-6">
+            <h3 class="card-title">Weekly progress</h3>
+            <canvas id="chartWeekly" height="200"></canvas>
+          </div>
+          <div class="card span-6">
+            <h3 class="card-title">Focus sessions by day</h3>
+            <canvas id="chartFocusSessions" height="200"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ SETTINGS ============ -->
+      <section class="page" id="page-settings" data-page="settings">
+        <div class="page-head">
+          <div>
+            <p class="eyebrow">Settings</p>
+            <h1 class="page-title">Make it yours</h1>
+          </div>
+        </div>
+
+        <div class="settings-grid">
+
+          <div class="card">
+            <h3 class="card-title">Appearance</h3>
+            <div class="settings-row">
+              <div>
+                <p class="settings-row-title">Theme</p>
+                <p class="settings-row-sub">Choose light or dark mode</p>
+              </div>
+              <div class="segmented" id="themeSegmented">
+                <button data-theme="light">Light</button>
+                <button data-theme="dark">Dark</button>
+              </div>
+            </div>
+            <div class="settings-row">
+              <div>
+                <p class="settings-row-title">Accent color</p>
+                <p class="settings-row-sub">Used for highlights and progress</p>
+              </div>
+              <div class="accent-swatches" id="accentSwatches">
+                <button class="swatch" data-accent="violet" style="--sw:#6C5CE7"></button>
+                <button class="swatch" data-accent="teal" style="--sw:#22D3B8"></button>
+                <button class="swatch" data-accent="amber" style="--sw:#FFB020"></button>
+                <button class="swatch" data-accent="rose" style="--sw:#FB5D8D"></button>
+                <button class="swatch" data-accent="blue" style="--sw:#4C8DFF"></button>
+              </div>
+            </div>
+            <div class="settings-row">
+              <div>
+                <p class="settings-row-title">Font size</p>
+                <p class="settings-row-sub">Adjust text scale across the app</p>
+              </div>
+              <input type="range" id="fontSizeSlider" min="90" max="120" value="100">
+            </div>
+          </div>
+
+          <div class="card">
+            <h3 class="card-title">Notifications</h3>
+            <div class="settings-row">
+              <div>
+                <p class="settings-row-title">Task reminders</p>
+                <p class="settings-row-sub">Get notified before tasks are due</p>
+              </div>
+              <label class="switch"><input type="checkbox" id="notifTasksToggle" checked><span></span></label>
+            </div>
+            <div class="settings-row">
+              <div>
+                <p class="settings-row-title">Focus session alerts</p>
+                <p class="settings-row-sub">Sound + toast when a session ends</p>
+              </div>
+              <label class="switch"><input type="checkbox" id="notifFocusToggle" checked><span></span></label>
+            </div>
+            <div class="settings-row">
+              <div>
+                <p class="settings-row-title">Daily summary</p>
+                <p class="settings-row-sub">A recap toast each evening</p>
+              </div>
+              <label class="switch"><input type="checkbox" id="notifSummaryToggle"><span></span></label>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3 class="card-title">Alarm defaults</h3>
+            <div class="settings-row">
+              <div>
+                <p class="settings-row-title">Default sound</p>
+                <p class="settings-row-sub">Used for new alarms and timers</p>
+              </div>
+              <select id="defaultAlarmSound">
+                <option value="classic">Classic</option>
+                <option value="bell">Bell</option>
+                <option value="digital">Digital</option>
+                <option value="schoolbell">School bell</option>
+                <option value="chime">Soft chime</option>
+                <option value="nature">Nature</option>
+              </select>
+            </div>
+            <div class="settings-row">
+              <div>
+                <p class="settings-row-title">Volume</p>
+                <p class="settings-row-sub">Default alarm playback volume</p>
+              </div>
+              <input type="range" id="defaultAlarmVolume" min="0" max="100" value="70">
+            </div>
+            <button class="btn btn-ghost" id="testDefaultAlarmBtn">Preview sound</button>
+          </div>
+
+          <div class="card">
+            <h3 class="card-title">Data</h3>
+            <div class="settings-row">
+              <div>
+                <p class="settings-row-title">Backup</p>
+                <p class="settings-row-sub">Export everything as a JSON file</p>
+              </div>
+              <button class="btn btn-ghost" id="exportJsonBtn">Export JSON</button>
+            </div>
+            <div class="settings-row">
+              <div>
+                <p class="settings-row-title">Restore</p>
+                <p class="settings-row-sub">Import a previously exported file</p>
+              </div>
+              <button class="btn btn-ghost" id="importJsonBtn">Import JSON</button>
+              <input type="file" id="importJsonInput" accept="application/json" hidden>
+            </div>
+            <div class="settings-row">
+              <div>
+                <p class="settings-row-title">Reset all data</p>
+                <p class="settings-row-sub">Permanently clears tasks, notes, and stats</p>
+              </div>
+              <button class="btn btn-danger" id="resetDataBtn">Reset data</button>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<!-- ============ MOBILE SIDEBAR OVERLAY ============ -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<!-- ============ TASK MODAL ============ -->
+<div class="modal-overlay" id="taskModalOverlay">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="taskModalTitle">
+    <div class="modal-head">
+      <h2 id="taskModalTitle">New task</h2>
+      <button class="modal-close" data-close-modal="taskModalOverlay" aria-label="Close">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <form id="taskForm" class="modal-body">
+      <input type="hidden" id="taskId">
+      <div class="form-group">
+        <label for="taskTitle">Title</label>
+        <input type="text" id="taskTitle" placeholder="e.g. Finish chapter 5 problem set" required>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="taskCategory">Category</label>
+          <select id="taskCategory">
+            <option value="study">Study</option>
+            <option value="assignment">Assignment</option>
+            <option value="exam">Exam</option>
+            <option value="reading">Reading</option>
+            <option value="project">Project</option>
+            <option value="personal">Personal</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="taskPriority">Priority</label>
+          <select id="taskPriority">
+            <option value="high">High</option>
+            <option value="medium" selected>Medium</option>
+            <option value="low">Low</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="taskDueDate">Due date</label>
+          <input type="date" id="taskDueDate">
+        </div>
+        <div class="form-group">
+          <label for="taskDueTime">Due time</label>
+          <input type="time" id="taskDueTime">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="taskNotes">Notes</label>
+        <textarea id="taskNotes" rows="3" placeholder="Add any details worth remembering…"></textarea>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-ghost" data-close-modal="taskModalOverlay">Cancel</button>
+        <button type="submit" class="btn btn-primary">Save task</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ============ NOTE MODAL ============ -->
+<div class="modal-overlay" id="noteModalOverlay">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="noteModalTitle">
+    <div class="modal-head">
+      <h2 id="noteModalTitle">New note</h2>
+      <button class="modal-close" data-close-modal="noteModalOverlay" aria-label="Close">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <form id="noteForm" class="modal-body">
+      <input type="hidden" id="noteId">
+      <div class="form-group">
+        <label for="noteTitleInput">Title</label>
+        <input type="text" id="noteTitleInput" placeholder="Note title" required>
+      </div>
+      <div class="form-group">
+        <label for="noteCategoryInput">Category</label>
+        <select id="noteCategoryInput">
+          <option value="study">Study</option>
+          <option value="ideas">Ideas</option>
+          <option value="reference">Reference</option>
+          <option value="personal">Personal</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="noteBodyInput">Content</label>
+        <textarea id="noteBodyInput" rows="8" placeholder="Start typing — autosaves as you go…"></textarea>
+      </div>
+      <div class="modal-actions">
+        <span class="autosave-indicator" id="autosaveIndicator">Saved</span>
+        <button type="button" class="btn btn-primary" data-close-modal="noteModalOverlay">Done</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ============ ALARM MODAL ============ -->
+<div class="modal-overlay" id="alarmModalOverlay">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="alarmModalTitle">
+    <div class="modal-head">
+      <h2 id="alarmModalTitle">New alarm</h2>
+      <button class="modal-close" data-close-modal="alarmModalOverlay" aria-label="Close">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <form id="alarmForm" class="modal-body">
+      <input type="hidden" id="alarmId">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="alarmTime">Time</label>
+          <input type="time" id="alarmTime" required>
+        </div>
+        <div class="form-group">
+          <label for="alarmLabel">Label</label>
+          <input type="text" id="alarmLabel" placeholder="e.g. Morning review">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Repeat on</label>
+        <div class="day-picker" id="alarmDayPicker">
+          <button type="button" data-day="0">S</button>
+          <button type="button" data-day="1">M</button>
+          <button type="button" data-day="2">T</button>
+          <button type="button" data-day="3">W</button>
+          <button type="button" data-day="4">T</button>
+          <button type="button" data-day="5">F</button>
+          <button type="button" data-day="6">S</button>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="alarmSound">Sound</label>
+          <select id="alarmSound">
+            <option value="classic">Classic</option>
+            <option value="bell">Bell</option>
+            <option value="digital">Digital</option>
+            <option value="schoolbell">School bell</option>
+            <option value="chime">Soft chime</option>
+            <option value="nature">Nature</option>
+            <option value="custom">Custom upload…</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="alarmVolume">Volume</label>
+          <input type="range" id="alarmVolume" min="0" max="100" value="70">
+        </div>
+      </div>
+      <div class="form-group" id="customSoundRow" hidden>
+        <label for="customSoundUpload">Upload MP3</label>
+        <input type="file" id="customSoundUpload" accept="audio/*">
+        <span class="settings-row-sub" id="customSoundName">No file chosen</span>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="alarmSnooze">Snooze length (min)</label>
+          <input type="number" id="alarmSnooze" min="1" max="30" value="5">
+        </div>
+        <div class="form-group toggle-inline">
+          <label for="alarmRepeatToggle">Repeat weekly</label>
+          <label class="switch"><input type="checkbox" id="alarmRepeatToggle"><span></span></label>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-ghost" id="previewAlarmBtn">Preview</button>
+        <button type="submit" class="btn btn-primary">Save alarm</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ============ RINGING ALARM OVERLAY ============ -->
+<div class="alarm-ring-overlay" id="alarmRingOverlay">
+  <div class="alarm-ring-card">
+    <div class="alarm-pulse" aria-hidden="true">
+      <svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 01-3.4 0"/></svg>
+    </div>
+    <h2 id="ringingAlarmLabel">Alarm</h2>
+    <p id="ringingAlarmTime">00:00</p>
+    <div class="alarm-ring-actions">
+      <button class="btn btn-ghost btn-large" id="snoozeAlarmBtn">Snooze</button>
+      <button class="btn btn-primary btn-large" id="stopAlarmBtn">Stop</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ EVENT POPUP (calendar day cell) ============ -->
+<div class="modal-overlay" id="dayPopupOverlay">
+  <div class="modal modal-sm" role="dialog" aria-modal="true">
+    <div class="modal-head">
+      <h2 id="dayPopupTitle">Day</h2>
+      <button class="modal-close" data-close-modal="dayPopupOverlay" aria-label="Close">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <ul class="task-mini-list" id="dayPopupTaskList"></ul>
+      <button class="btn btn-primary" id="dayPopupAddTaskBtn" style="margin-top:14px;width:100%;">Add task for this day</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ QUICK ADD ============ -->
+<div class="modal-overlay" id="quickAddOverlay">
+  <div class="modal modal-sm" role="dialog" aria-modal="true">
+    <div class="modal-body" style="padding-top:20px;">
+      <input type="text" id="quickAddInput" placeholder="Type a task and hit Enter…" class="quick-add-input" autocomplete="off">
+      <p class="settings-row-sub" style="margin-top:8px;">Press Enter to add · Esc to close</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============ TOAST CONTAINER ============ -->
+<div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
+<!-- ============ CONFIRM DIALOG ============ -->
+<div class="modal-overlay" id="confirmOverlay">
+  <div class="modal modal-sm" role="alertdialog" aria-modal="true">
+    <div class="modal-body" style="padding-top:24px;">
+      <h2 id="confirmTitle" style="margin-bottom:8px;">Are you sure?</h2>
+      <p class="settings-row-sub" id="confirmMessage">This action cannot be undone.</p>
+      <div class="modal-actions" style="margin-top:20px;">
+        <button class="btn btn-ghost" id="confirmCancelBtn">Cancel</button>
+        <button class="btn btn-danger" id="confirmOkBtn">Confirm</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
